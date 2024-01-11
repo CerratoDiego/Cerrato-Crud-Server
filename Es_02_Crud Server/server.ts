@@ -10,18 +10,18 @@ _dotenv.config({ "path": ".env" });
 
 // Variabili relative a MongoDB ed Express
 import { MongoClient, ObjectId } from "mongodb";
-const DBNAME = "unicorns";
+const DBNAME = process.env.DBNAME;
 const connectionString: string = process.env.connectionStringAtlas;
 const app = _express();
 
-// Variabili generiche
-const PORT: number = 1337;
-let paginaErrore;
+//CREAZIONE ED AVVIO DEL SERVER
 
-// app è il router di Express, si occupa di tutta la gestione delle richieste http
+//1. app è il router di Express, si occupa di tutta la gestione delle richieste http
+const PORT: number = parseInt(process.env.PORT);
+let paginaErrore;
 const server = _http.createServer(app);
 
-// Il secondo parametro facoltativo ipAddress consente di mettere il server in ascolto su una delle interfacce della macchina, se non lo metto viene messo in ascolto su tutte le interfacce (3 --> loopback e 2 di rete)
+//2. Il secondo parametro facoltativo ipAddress consente di mettere il server in ascolto su una delle interfacce della macchina, se non lo metto viene messo in ascolto su tutte le interfacce (3 --> loopback e 2 di rete)
 server.listen(PORT, () => {
     init();
     console.log(`Il Server è in ascolto sulla porta ${PORT}`);
@@ -107,7 +107,14 @@ app.get("/api/:collection", async (req, res, next) => {
 
 app.get("/api/:collection/:id", async (req, res, next) => {
     let selectedCollection = req["params"].collection;
-    let objId = new ObjectId(req["params"].id);
+    let id = req["params"].id;
+    let objId;
+    if (ObjectId.isValid(id)) {
+        objId = new ObjectId(req["params"].id);
+    }
+    else {
+        objId = id as unknown as ObjectId;
+    }
     const client = new MongoClient(connectionString);
     await client.connect();
     let collection = client.db(DBNAME).collection(selectedCollection);
@@ -131,7 +138,14 @@ app.post("/api/:collection", async (req, res, next) => {
 
 app.delete("/api/:collection/:id", async (req, res, next) => {
     let selectedCollection = req["params"].collection;
-    let objId = new ObjectId(req["params"].id);
+    let id = req["params"].id;
+    let objId;
+    if (ObjectId.isValid(id)) {
+        objId = new ObjectId(req["params"].id);
+    }
+    else {
+        objId = id as unknown as ObjectId;
+    }
     const client = new MongoClient(connectionString);
     await client.connect();
     let collection = client.db(DBNAME).collection(selectedCollection);
@@ -155,12 +169,19 @@ app.delete("/api/:collection", async (req, res, next) => {
 
 app.patch("/api/:collection/:id", async (req, res, next) => {
     let selectedCollection = req["params"].collection;
-    let objId = new ObjectId(req["params"].id);
-    let updatedRecord = req["body"];
+    let id = req["params"].id;
+    let objId;
+    if (ObjectId.isValid(id)) {
+        objId = new ObjectId(req["params"].id);
+    }
+    else {
+        objId = id as unknown as ObjectId;
+    }
+    let action = req["body"];
     const client = new MongoClient(connectionString);
     await client.connect();
     let collection = client.db(DBNAME).collection(selectedCollection);
-    let rq = collection.updateOne({ "_id": objId }, { "$set": updatedRecord });
+    let rq = collection.updateOne({ "_id": objId }, action);
     rq.then((data) => res.send(data));
     rq.catch((err) => res.status(500).send(`Errore esecuzione query: ${err}`));
     rq.finally(() => client.close());
@@ -181,7 +202,14 @@ app.patch("/api/:collection", async (req, res, next) => {
 
 app.put("/api/:collection/:id", async (req, res, next) => {
     let selectedCollection = req["params"].collection;
-    let objId = new ObjectId(req["params"].id);
+    let id = req["params"].id;
+    let objId;
+    if (ObjectId.isValid(id)) {
+        objId = new ObjectId(req["params"].id);
+    }
+    else {
+        objId = id as unknown as ObjectId;
+    }
     let updatedRecord = req["body"];
     const client = new MongoClient(connectionString);
     await client.connect();
