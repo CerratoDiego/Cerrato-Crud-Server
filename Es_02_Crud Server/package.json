@@ -4,6 +4,7 @@
   "description": "My NPM library",
   "main": "server.js",
   "dependencies": {
+    "@types/node": "^20.11.0",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -23,6 +24,6 @@
     "Express",
     "Mongo"
   ],
-  "author": "Corneanu George Alexandru",
+  "author": "Cerrato Diego",
   "license": "ISC"
 }
