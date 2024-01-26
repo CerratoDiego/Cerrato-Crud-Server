@@ -70,13 +70,37 @@ app.use("/", (req: any, res: any, next: any) => {
 });
 
 // 5. Controllo degli accessi tramite CORS
+const whitelist = [
+    "http://cerratodiego-crud-server.onrender.com", // porta 80 (default)
+    "https://cerratodiego-crud-server.onrender.com", // porta 443 (default)
+    "http://localhost:3000",
+    "https://localhost:3001",
+    "http://localhost:4200" // server angular
+];
+
 const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin) // browser direct call
+            return callback(null, true);
+        if (whitelist.indexOf(origin) === -1) {
+            var msg = `The CORS policy for this site does not
+    allow access from the specified Origin.`
+            return callback(new Error(msg), false);
+        }
+        else
+            return callback(null, true);
+    },
+    credentials: true
+};
+app.use("/", _cors(corsOptions));
+
+/* const corsOptions = {
     origin: function (origin, callback) {
         return callback(null, true);
     },
     credentials: true
 };
-app.use("/", _cors(corsOptions));
+app.use("/", _cors(corsOptions)); */
 
 //********************************************************************************************//
 // Routes finali di risposta al client
