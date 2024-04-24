@@ -1,0 +1,110 @@
+[
+  {
+    "_id": {
+      "$oid": "661e56c39d3e0e4e53d97260"
+    },
+    "nome": "Perizia su appartamento in centro storico",
+    "indirizzo": "Via Umberto I 12",
+    "città": "Genola",
+    "immagini": [
+      {
+        "url": "http://www.example.com/image1.jpg",
+        "commento": "Vista esterna"
+      },
+      {
+        "url": "http://www.example.com/image2.jpg",
+        "commento": "Salone"
+      }
+    ],
+    "descrizione": "Questa è una perizia su un appartamento nel centro storico di Genola.",
+    "rilevatore": 2,
+    "latitudine": 44.598811,
+    "longitudine": 7.717094,
+    "data": "2024-04-18",
+    "ora": "10:00"
+  },
+  {
+    "_id": {
+      "$oid": "661e56c39d3e0e4e53d97261"
+    },
+    "nome": "Perizia su villa con giardino",
+    "indirizzo": "Via Giuseppe Garibaldi 30",
+    "città": "Bra",
+    "immagini": [
+      {
+        "url": "http://www.example.com/image3.jpg",
+        "commento": "Facciata"
+      },
+      {
+        "url": "http://www.example.com/image4.jpg",
+        "commento": "Giardino"
+      }
+    ],
+    "descrizione": "Questa è una perizia su una villa con giardino a Bra.",
+    "rilevatore": 1,
+    "latitudine": 44.703434,
+    "longitudine": 7.861458,
+    "data": "2024-04-19",
+    "ora": "11:30"
+  },
+  {
+    "_id": {
+      "$oid": "661e56c39d3e0e4e53d97262"
+    },
+    "nome": "Perizia su terreno agricolo",
+    "indirizzo": "Corso Alessandro Tassoni 5",
+    "città": "Bra",
+    "immagini": [
+      {
+        "url": "http://www.example.com/image5.jpg",
+        "commento": "Vista dall'alto"
+      }
+    ],
+    "descrizione": "Questa è una perizia su un terreno agricolo a Bra.",
+    "rilevatore": 2,
+    "latitudine": 44.699097,
+    "longitudine": 7.848328,
+    "data": "2024-04-20",
+    "ora": "09:45"
+  },
+  {
+    "_id": {
+      "$oid": "661e56c39d3e0e4e53d97263"
+    },
+    "nome": "Perizia su terreno agricolo",
+    "indirizzo": "Via Cavour 8",
+    "città": "Alba",
+    "immagini": [
+      {
+        "url": "http://www.example.com/image6.jpg",
+        "commento": "Vigneto"
+      }
+    ],
+    "descrizione": "Questa è una perizia su un terreno agricolo ad Alba.",
+    "rilevatore": 3,
+    "latitudine": 44.705224,
+    "longitudine": 8.034256,
+    "data": "2024-04-21",
+    "ora": "14:15"
+  },
+  {
+    "_id": {
+      "$oid": "661e56c39d3e0e4e53d97264"
+    },
+    "nome": "Perizia su terreno agricolo",
+    "indirizzo": "Corso Torino 45",
+    "città": "Alba",
+    "immagini": [
+      {
+        "url": "http://www.example.com/image7.jpg",
+        "commento": "Vista panoramica"
+      }
+    ],
+    "descrizione": "Questa è una perizia su un terreno agricolo ad Alba.",
+    "rilevatore": 3,
+    "latitudine": 44.708597,
+    "longitudine": 8.031569,
+    "data": "2024-04-22",
+    "ora": "16:00"
+  }
+]

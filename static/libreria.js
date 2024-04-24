@@ -1,7 +1,24 @@
 "use strict";
-
-const _URL = "" 
+const _URL = ""//"https://192.168.137.145:3000" 
 // Se vuota viene assegnata in automatico l'origine da cui è stata scaricata la pagina
+const MAP_KEY = "AIzaSyBZKYgxbiyRE7DknUpnRP2QHCBVjvLgH7g";
+const URL_MAPS = "https://maps.googleapis.com/maps/api"
+
+axios.interceptors.request.use((config)=>{
+	let token=localStorage.getItem("token")
+	if(token)
+	{
+		console.log("Token sent: "+token)
+		config.headers["authorization"]=token
+	}
+	return config
+})
+axios.interceptors.response.use((response)=>{
+	let token=response.headers["authorization"]
+	console.log("Token received: "+token)
+	localStorage.setItem("token",token)
+	return response
+})
 
 function inviaRichiesta(method, url, parameters={}) {
 	let config={
@@ -44,3 +61,27 @@ function errore(err) {
 	}
 }
 
+function caricaGoogleMaps() {
+	let promise = new Promise(function (resolve, reject) {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = URL_MAPS + '/js?v=3&key=' + MAP_KEY;
+		document.body.appendChild(script);
+		// onload e onerror sono semplici puntatori a funzione
+		// in cui memorizzare i puntatori alle funzione da eseguire
+		script.onload = resolve;  // non inietta alcun dato
+		/*script.onerror = reject;  // non inietta alcun errore
+		script.onerror = function (){
+			throw new Error("Errore caricamento GoogleMaps")
+		} */
+		script.onerror = function () {
+			reject("Errore caricamento GoogleMaps")
+		}
+	})
+	return promise
+}
+
+
+function generaNumero(a, b) {
+	return Math.floor((b - a) * Math.random()) + a;
+}

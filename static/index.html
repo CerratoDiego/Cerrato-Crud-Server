@@ -1,149 +1,142 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CRUD Server</title>
-    <link rel="icon" href="img/icoVallauri.png" type="image/png" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link rel="stylesheet" href="./index.css">
-	
-	<script src="./jquery-3.5.1.min.js"></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rilievi e perizie</title>
+
+    <link rel="icon" href="img/logo.png" type="image/png" />
+
+    <!-- Custom fonts for this template-->
+    <link href="pages/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="pages/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Libraries-->
+    <script src="./jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	<script src="./axios@1.1.2.min.js"></script>
-	<script src="./libreria.js"></script>
-	<script src="./index.js"></script>
+    <script src="./axios@1.1.2.min.js"></script>
+    <script src="./libreria.js"></script>
+    <script src="./index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.0/dist/js/select2.min.js"></script>
+
 </head>
 
 <body>
- <div class="container-fluid">
-  <div class="row">
-	<div class='col-xl-2'></div>
-	<div class='col-xl-8 col-sm-12'>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion simplebar" id="accordionSidebar">
 
-		<!-- LOGO SUPERIORE -->
-		<div class="text-center" style="padding:15px">
-			<img src="img/vallauri.jpg" class="img-fluid">
-		</div>
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-text mx-3">Rilievi e perizie</div>
+            </a>
 
-		<!-- *********************** Intestazione ************************** -->
-		<div id="divIntestazione" class='row'>
-			<div class="col-sm-4">
-				<span>Collection: </span>
-				<strong> </strong>
-			</div>
-			<div class="col-sm-3">
-				<span>Documents: </span>
-				<strong> </strong>
-			</div>
-			<div class="col-sm-3">
-			</div>
-			<div class='col-sm-2'>
-				<button  class="btn btn-success btn-sm" id="btnAdd">
-					Add 
-				</button>
-			</div>
-		</div>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
-		<!-- ************************** FILTERS *************************** -->
-		<div class="card">
-			<div class="card-header bg-secondary text-white font-weight-bold">
-				Filters
-			</div>
-			<div class="card-body">
-				<div class='row'>
-					<!-- ListBox Hair  -->
-				    <div class="col-xl-4 col-sm-4 form-group text-center" 
-					     id="divHair">
-					  <div class="form-check-inline">
-						<label for="lstHair" 
-						       class="checkbox-inline font-weight-bold" 
-						       style="padding-right:10px"> 
-							   Hair: 
-						</label>                            
-						<select class="form-control" id="lstHair">
-							<option>Blonde</option>
-							<option>Brown</option>
-							<option>Grey</option>
-						</select>
-					  </div>	
-					</div>
-					
-					<div class='col-xl-1 col-sm-1'> </div>
-					
-					<div class='col-xl-5 col-sm-5 form-group'>
-						<div class="form-check-inline">
-							<span class="font-weight-bold" 
-							      style="padding-right:10px">
-								Gender:  
-							</span>
-							<label class="form-check-label">
-								<input type="checkbox" class="form-check-input"
-								       value="M">M
-							</label>
-						</div>
-						<div class="form-check-inline">
-							<label class="form-check-label">
-								<input type="checkbox" class="form-check-input"
-								       value="F">F
-							</label>
-						</div>
-					</div>
+            <!-- Nav Item - Perizie -->
+            <li class="nav-item active">
+                <a id="dashboardToggler" class="nav-link" href="#">
+                    <i class="fas fa-fw fa-file-alt"></i>
+                    <span>Perizie</span>
+                </a>
+            </li>
 
-					<div class='col-xl-1 col-sm-2'>
-					 <button class="btn btn-success btn-sm" id="btnFind">
-						  Find
-				     </button>
-					</div>					 
-				</div> 
-			</div>
-		</div>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
 
-		<!-- *********************** Main Section ************************* -->
-		<div class="card">
-			<div class="card-body">
-				<div class='row'>
+            <!-- Nav Item - Nuovo utente -->
+            <li class="nav-item">
+                <a id="newUserToggler" class="nav-link" href="newUser.html">
+                    <i class="fas fa-fw fa-user-plus"></i>
+                    <span>Nuovo utente</span>
+                </a>
+            </li>
 
-					<!-- collections -->
-					<div class='col-xl-2 col-sm-12'>
-						<div class="bg-secondary" id="divCollections">
-							<label>
-								<input type="radio" name="optCollections">
-								<span>  </span>
-							</label>
-						</div>
-					</div>
+            <!-- Nav Item - Gestione utenti -->
+            <li class="nav-item">
+                <a id="usersToggler" class="nav-link" href="users.html">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Gestione utenti</span>
+                </a>
+            </li>
 
-					<!-- tabella-->
-					<div class='col-xl-6 col-sm-12'>
-						<div class="table-responsive ">
-							<table class="table table-hover" id="mainTable">
-								<thead class="bg-secondary" style="color:white">
-									<tr>
-										<th width="45%">ID</th>
-										<th width="20%">name</th>
-										<th width="35%"></th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
-						</div>
-					</div>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
 
-					<!-- dettagli-->
-					<div class='col-xl-4 col-sm-12' id="divDettagli">
-						<!--textarea></textarea-->
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-	<div class='col-xl-2'></div>
-  </div>
- </div>
- <button id="test">TEST</button>
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Accesso
+            </div>
+
+            <!-- Nav Item - Logout -->
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span></a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <div id="mainContentWrapper" class="d-flex flex-column">
+            <div id="dashboard" class="container-fluid" style="width: 120%;">
+                <br>
+                <h1 class="mb-4 text-gray-800">Perizie</h1>
+                <div class="row">
+                    <div class="col-lg-8" id="map"></div>
+                    <div class="col-lg-4" id="filtri">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Filtri</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="tipo">Rilevata da:</label>
+                                    <select class="form-control js-example-basic-single" id="utenteFilter">
+                                        <option value="Tutti">Tutti</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="infoPercorso" class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h7 class="m-0 font-weight-bold text-primary">Informazioni percorso</h7>
+                            </div>
+                            <div class="card-body">
+                                <h5 id="durataPercorso"></h5>
+                                <button id="btnNascondiPercorso" class="btn btn-danger">
+                                    <i class="fas fa-map-marker-alt"></i> Nascondi Percorso
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h3 class="m-0 font-weight-bold text-primary">Perizie totali:</h6>
+                            </div>
+                            <div class="card-body">
+                                <h1 id="nPerizie"></h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

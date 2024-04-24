@@ -1,0 +1,53 @@
+[
+  {
+    "_id": {
+      "$oid": "6616a61404d32d6d79b7eab8"
+    },
+    "username": "admin",
+    "oldPassword": "admin",
+    "password": "",
+    "nome": "Diego",
+    "cognome": "Cerrato",
+    "email": "d.cerrato.2230@vallauri.edu",
+    "isAdmin": true
+  },
+  {
+    "_id": {
+      "$oid": "661e57de9d3e0e4e53d97264"
+    },
+    "username": "Rossi",
+    "oldPassword": "rossi",
+    "password": "",
+    "nome": "Federico",
+    "cognome": "Rossi",
+    "email": "federico.rossi@example.com",
+    "codice": 1,
+    "isAdmin": false
+  },
+  {
+    "_id": {
+      "$oid": "661e58169d3e0e4e53d97265"
+    },
+    "username": "Verdi",
+    "oldPassword": "verdi",
+    "password": "",
+    "nome": "Giuseppe",
+    "cognome": "Verdi",
+    "email": "giuseppe.verdi@example.com",
+    "codice": 2,
+    "isAdmin": false
+  },
+  {
+    "_id": {
+      "$oid": "661e58219d3e0e4e53d97266"
+    },
+    "username": "Bianchi",
+    "oldPassword": "bianchi",
+    "password": "",
+    "nome": "Rolando",
+    "cognome": "Bianchi",
+    "email": "rolando.bianchi@example.com",
+    "codice": 3,
+    "isAdmin": false
+  }
+]
