@@ -12,7 +12,7 @@ import _axios from "axios";
 const _nodemailer = require("nodemailer");
 import _jwt from "jsonwebtoken";
 import _bcrypt from "bcryptjs"; // + @types
-import { google } from "googleapis";
+// import { google } from "googleapis";
 
 // Lettura delle password e parametri fondamentali
 _dotenv.config({ "path": ".env" });
@@ -57,6 +57,8 @@ function init() {
         }
     });
 }
+
+const EMAIL = process.env.email;
 
 //********************************************************************************************//
 // Routes middleware
@@ -104,13 +106,6 @@ const corsOptions = {
 };
 app.use("/", _cors(corsOptions));
 
-const whitelist = [
-    "http://corneanugeorgealexandru-crudserver.onrender.com",	// porta 80 (default)
-    "https://corneanugeorgealexandru-crudserver.onrender.com",	// porta 443 (default)
-    "http://localhost:3000",
-    "https://localhost:3001",
-    "http://localhost:4200" // server angular
-];
 // Procedura che utilizza la whitelist, accetta solo le richieste presenti nella whitelist
 /*const corsOptions = {
     origin: function (origin, callback) {
@@ -139,7 +134,7 @@ const transporter = _nodemailer.createTransport({
 let message = _fs.readFileSync("./message.html", "utf8");*/
 
 // 7. Configurazione di nodemailer con utilizzo di oAuth2
-const o_Auth2 = JSON.parse(process.env.oAuthCredential as any)
+/* const o_Auth2 = JSON.parse(process.env.oAuthCredential as any)
 const OAuth2 = google.auth.OAuth2; // Oggetto OAuth2
 const OAuth2Client = new OAuth2(
     o_Auth2["client_id"],
@@ -147,7 +142,7 @@ const OAuth2Client = new OAuth2(
 );
 OAuth2Client.setCredentials({
     refresh_token: o_Auth2.refresh_token,
-});
+}); */
 
 let message = _fs.readFileSync("./message.html", "utf8");
 //8. login
@@ -408,11 +403,11 @@ app.patch("/api/encryptPassword", async (req, res, next) => {
             let promises = []
             for (let user of data) {
                 let regex = new RegExp("^\\$2[aby]\\$10\\$.{53}$")
-                if (!regex.test(user.password)) {
+                if (!regex.test(user.password) || user.passwordUpdated == true) {
 
                     let _id = new ObjectId(user._id)
                     let newPassword = _bcrypt.hashSync(user.oldPassword, 10)
-                    let promise = collection.updateOne({ "_id": _id }, { "$set": { "password": newPassword } })
+                    let promise = collection.updateOne({ "_id": _id }, { "$set": { "password": newPassword, "passwordUpdated": false } })
                     promises.push(promise)
                 }
             }
@@ -504,15 +499,15 @@ app.delete("/api/eliminaUtente", async (req, res, next) => {
     })
 });
 
-app.post("/api/sendNewPassword", async (req, res, next) => {
-    let username = "d.cerrato.2230@vallauri.edu"
+/* app.post("/api/sendNewPassword", async (req, res, next) => {
+    let username = req["body"]["username"]
     let password = "password"
-    message = message.replace("__user", username).replace("__password", password)
+    message = message.replace("__password", password)
     const accessToken = await OAuth2Client.getAccessToken().catch((err) => { res.status(500).send("Errore richiesta access token a google " + err) })
     console.log(accessToken)
     const auth = {
         "type": "OAuth2",
-        "user": username, // process.env.email,
+        "user": EMAIL, // process.env.email,
         "clientId": o_Auth2.client_id,
         "clientSecret": o_Auth2.client_secret,
         "refreshToken": o_Auth2.refresh_token,
@@ -524,13 +519,9 @@ app.post("/api/sendNewPassword", async (req, res, next) => {
     });
     let mailOptions = {
         "from": auth.user,
-        "to": username,
-        "subject": "nuova password di accesso a rilievi e perizie",
-        "html": message,
-        "attachments": [{
-            "filename": "nuovaPassword.png",
-            "path": "./qrCode.png"
-        }]
+        "to": EMAIL,
+        "subject": "Nuova password di accesso a rilievi e perizie",
+        "html": message
     }
     transporter.sendMail(mailOptions, function (err, info) {
         if (err) {
@@ -545,7 +536,96 @@ app.post("/api/sendNewPassword", async (req, res, next) => {
         }
     })
 
+}) */
+
+app.patch("/api/aggiornaPassword", async (req, res, next) => {
+    let username = req["body"]["username"]
+    let newPassword = req["body"]["newPassword"]
+    let oldPassword = req["body"]["oldPassword"]
+    let passwordUpdated = true;
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    const collection = client.db(DBNAME).collection("utenti")
+    let request
+    if (oldPassword == "") {
+        request = collection.updateOne({ username }, { "$set": { "oldPassword": newPassword } })
+    }
+    else {
+        request = collection.updateOne({ "username": username, "oldPassword": oldPassword }, { "$set": { "oldPassword": newPassword, "passwordUpdated": true } })
+    }
+    request.then((data) => {
+        res.send(data)
+    })
+    request.catch((err) => {
+        res.status(500).send("Query fallita")
+    })
+    request.finally(() => {
+        client.close()
+    })
+
+});
+
+// ________MOBILE________ //
+
+app.post("/api/loginMobile", async (req, res, next) => {
+    let username = req["body"]["username"]
+    let password = req["body"]["password"]
+    const client = new MongoClient(connectionString)
+    await client.connect()
+    const collection = client.db(DBNAME).collection("utenti")
+    let regex = new RegExp(username, "i")
+    let request = collection.findOne({ "username": regex }, { "projection": { "username": 1, "password": 1 } })
+    request.then((dbUser) => {
+        if (!dbUser) {
+            res.status(401).send("Username not valid")
+        }
+        else if (dbUser.username == "admin") {
+            res.status(401).send("User not authorized")
+        }
+        else {
+            console.log("Password: " + password + " dbUser.password: " + dbUser.password)
+            _bcrypt.compare(password, dbUser.password, (err, success) => {
+                if (err)
+                    res.status(500).send("Bcrypt compare error " + err.message)
+                else {
+                    if (!success) {
+                        res.status(401).send("Password not valid")
+                    }
+                    else {
+                        let token = creaToken(dbUser);
+                        console.log(token)
+                        res.setHeader("authorization", token)
+                        res.setHeader("access-control-expose-headers", "authorization")
+                        res.send({ "ris": "ok" })
+                    }
+                }
+            })
+        }
+    })
+    request.catch((err) => {
+        res.status(500).send("Query fallita")
+    })
+    request.finally(() => {
+        client.close()
+    })
 })
+
+app.post("/api/aggiungiNuovaPerizia", async (req, res, next) => {
+    let perizia = req["body"];
+    const client = new MongoClient(connectionString);
+    await client.connect();
+    const collection = client.db(DBNAME).collection("perizie");
+    let request = collection.insertOne(perizia);
+    request.then((data) => {
+        res.send(data);
+    });
+    request.catch((err) => {
+        res.status(500).send("Query fallita");
+    });
+    request.finally(() => {
+        client.close();
+    });
+});
 
 
 //********************************************************************************************//
